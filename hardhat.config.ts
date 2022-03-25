@@ -5,6 +5,7 @@ import "solidity-coverage";
 import "hardhat-gas-reporter";
 import "hardhat-contract-sizer";
 import 'dotenv/config';
+import './tasks/bridge.ts';
 
 /**
  * @type import('hardhat/config').HardhatUserConfig
