@@ -1,4 +1,4 @@
-# NFT Marketplace
+# Bridge Contract
 Rinkeby Bridge contract: https://rinkeby.etherscan.io/address/0xfadf4f1d50252737cb4d1c7abd8899a4ad3dcec3
 
 Rinkeby Token contract: https://rinkeby.etherscan.io/address/0xFddd3A571A5ccC393C9F062B7949B07B99e41E71
