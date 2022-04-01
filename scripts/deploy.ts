@@ -19,7 +19,7 @@ async function main() {
     const bridge = await Bridge.deploy(4);
     await bridge.deployed();
 
-    await token.transferOwnership(bridge.address)
+    await token.transferOwnership(bridge.address);
     await bridge.includeToken(await token.symbol(), token.address);
 
     console.log("Bridge address:", bridge.address);

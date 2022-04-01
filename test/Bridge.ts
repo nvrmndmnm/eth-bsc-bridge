@@ -21,12 +21,12 @@ describe("Bridge contract", () => {
         Token = await ethers.getContractFactory("Token");
         Bridge = await ethers.getContractFactory("Bridge");
 
+        [owner, addr1, addr2] = await ethers.getSigners();
+
         tokenEth = await Token.deploy("Big G Token", "BGT");
         tokenBsc = await Token.deploy("Big G Token", "BGT");
-        bridgeEth = await Bridge.deploy(1);
-        bridgeBsc = await Bridge.deploy(2);
-
-        [owner, addr1, addr2] = await ethers.getSigners();
+        bridgeEth = await Bridge.deploy(owner.address, 1);
+        bridgeBsc = await Bridge.deploy(owner.address, 2);
 
         await tokenEth.mint(addr1.address, 1000);
         await tokenEth.transferOwnership(bridgeEth.address);
@@ -85,7 +85,7 @@ describe("Bridge contract", () => {
             let msg = ethers.utils.solidityKeccak256(
                 ["address", "uint256"], [addr1.address, 100]);
 
-            let signature = await addr1.signMessage(ethers.utils.arrayify(msg));
+            let signature = await owner.signMessage(ethers.utils.arrayify(msg));
             let sig = ethers.utils.splitSignature(signature);
             await bridgeEth.connect(addr1).swap(addr2.address, 100, 1, 2, 1, DEFAULT_SYMBOL);
             await bridgeBsc.connect(addr1).redeem(addr2.address, 100, 1, 2, 1, DEFAULT_SYMBOL, sig.v, sig.r, sig.s);
@@ -96,7 +96,7 @@ describe("Bridge contract", () => {
             let msg = ethers.utils.solidityKeccak256(
                 ["address", "uint256"], [addr1.address, 100]);
 
-            let signature = await addr1.signMessage(ethers.utils.arrayify(msg));
+            let signature = await owner.signMessage(ethers.utils.arrayify(msg));
             let sig = await ethers.utils.splitSignature(signature);
             await bridgeEth.connect(addr1).swap(addr1.address, 100, 1, 2, 1, DEFAULT_SYMBOL);
             await expect(bridgeBsc.connect(owner).redeem(addr1.address, 100, 1, 2, 1, DEFAULT_SYMBOL, sig.v, sig.r, sig.s))
@@ -107,7 +107,7 @@ describe("Bridge contract", () => {
             let msg = ethers.utils.solidityKeccak256(
                 ["address", "uint256"], [addr1.address, 100]);
 
-            let signature = await addr1.signMessage(ethers.utils.arrayify(msg));
+            let signature = await owner.signMessage(ethers.utils.arrayify(msg));
             let sig = ethers.utils.splitSignature(signature);
             await bridgeEth.connect(addr1).swap(addr1.address, 100, 1, 2, 1, DEFAULT_SYMBOL);
             await expect(bridgeBsc.connect(addr1).redeem(addr2.address, 100, 1, 4, 1, DEFAULT_SYMBOL, sig.v, sig.r, sig.s))
@@ -118,7 +118,7 @@ describe("Bridge contract", () => {
             let msg = ethers.utils.solidityKeccak256(
                 ["address", "uint256"], [addr1.address, 100]);
 
-            let signature = await addr1.signMessage(ethers.utils.arrayify(msg));
+            let signature = await owner.signMessage(ethers.utils.arrayify(msg));
             let sig = ethers.utils.splitSignature(signature);
             await bridgeEth.connect(addr1).swap(addr1.address, 100, 1, 2, 1, DEFAULT_SYMBOL);
             await expect(bridgeBsc.connect(addr1).redeem(addr2.address, 100, 1, 2, 1, "SYMB", sig.v, sig.r, sig.s))
@@ -129,7 +129,7 @@ describe("Bridge contract", () => {
             let msg = ethers.utils.solidityKeccak256(
                 ["address", "uint256"], [addr1.address, 100]);
 
-            let signature = await addr1.signMessage(ethers.utils.arrayify(msg));
+            let signature = await owner.signMessage(ethers.utils.arrayify(msg));
             let sig = ethers.utils.splitSignature(signature);
             await bridgeEth.connect(addr1).swap(addr1.address, 100, 1, 2, 1, DEFAULT_SYMBOL);
             await bridgeBsc.connect(addr1).redeem(addr2.address, 100, 1, 2, 1, DEFAULT_SYMBOL, sig.v, sig.r, sig.s);
@@ -141,7 +141,7 @@ describe("Bridge contract", () => {
             let msg = ethers.utils.solidityKeccak256(
                 ["address", "uint256"], [addr1.address, 100]);
 
-            let signature = await addr1.signMessage(ethers.utils.arrayify(msg));
+            let signature = await owner.signMessage(ethers.utils.arrayify(msg));
             let sig = ethers.utils.splitSignature(signature);
             await bridgeEth.connect(addr1).swap(addr2.address, 100, 1, 2, 1, DEFAULT_SYMBOL);
             await expect(bridgeBsc.connect(addr1).redeem(addr2.address, 100, 1, 2, 1, DEFAULT_SYMBOL, sig.v, sig.r, sig.s))

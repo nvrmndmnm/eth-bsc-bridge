@@ -5,11 +5,13 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./IToken.sol";
 
 contract Bridge is Ownable {
+    address public validator;
     uint256 public chainId;
     mapping(string => address) public allowedTokens;
     mapping(address => mapping(uint256 => bool)) public processedNonces;
 
-    constructor(uint256 _chainId) {
+    constructor(address _validator, uint256 _chainId) {
+        validator = _validator;
         chainId = _chainId;
     }
 
@@ -70,7 +72,7 @@ contract Bridge is Ownable {
         );
         require(allowedTokens[symbol] != address(0), "Token must be allowed");
         require(
-            checkSign(msg.sender, amount, v, r, s) == msg.sender,
+            checkSign(msg.sender, amount, v, r, s) == validator,
             "Signature doesn't match"
         );
         require(
